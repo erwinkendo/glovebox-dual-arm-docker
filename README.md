@@ -8,7 +8,7 @@ A docker container for simulating dual robotic arms inside a glovebox.
 Clone the repository using:
 
 ```bash
-git clone --recursive git@github.com:otokatli/glovebox-dual-arm-docker.git
+git clone git@github.com:erwinkendo/glovebox-dual-arm-docker.git
 ```
 
 ## Running the Simulation
