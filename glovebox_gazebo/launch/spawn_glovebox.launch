@@ -1,0 +1,54 @@
+<launch>
+
+    <!-- Arguments -->
+    <!-- Start the GUIs -->
+    <arg name="start_gazebo" default="true"/>
+    <arg name="gazebo_gui"   default ="true"/>
+    <arg name="start_rviz" default="true"/>
+    
+    <!-- Arm and gripper type -->
+    <arg name="arm" default="gen3"/>
+    <arg name="dof" default="7" if="$(eval arg('arm') == 'gen3')"/> <!-- Number of degrees of freedom of the arm -->
+    <arg name="dof" default="6" if="$(eval arg('arm') == 'gen3_lite')"/> <!-- Number of degrees of freedom of the arm -->
+    <arg name="vision" default="true"/> <!-- True if the arm has a Vision module -->
+
+    <!-- Default gripper for Gen3 is none, default gripper for Gen3 lite is gen3_lite_2f -->
+    <arg name="gripper" default="" if="$(eval arg('arm') == 'gen3')"/>
+    <arg name="gripper" default="gen3_lite_2f" if="$(eval arg('arm') == 'gen3_lite')"/>
+
+    <arg name="robot_ns_A" default="robot_A"/>
+    <arg name="robot_ns_B" default="robot_B"/>
+    <arg name="prefix" default=""/>
+    <arg name="cyclic_data_publish_rate" default="40"/> <!--Hz-->
+
+    <!-- Use trajectory controllers and MoveIt -->
+    <!-- TODO: what is this parameter used for? -->
+    <!-- <arg name="use_trajectory_controller" default="false"/> -->
+
+    <!-- Gazebo parameters -->
+    <arg name="use_sim_time" default="true"/>
+    <arg name="debug" default="false" />
+    <arg name="paused" default="true"/>
+
+    <!-- Start Gazebo -->
+    <include file="$(find glovebox_gazebo)/launch/start_gazebo.launch" if="$(arg start_gazebo)">
+            <arg name="gui" value="$(arg gazebo_gui)"/>
+            <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+            <arg name="debug" value="$(arg debug)"/>
+            <arg name="paused" value="$(arg paused)"/>
+    </include>
+
+    <!-- Delay before homing the arm -->
+    <arg name="start_delay_seconds" default="10"/>
+
+    <!-- Spawn the glovebox and the pedestal -->
+    <group ns = "glovebox">
+        <node name="spawn_glovebox" pkg="gazebo_ros" 
+          type="spawn_model" args="-file $(find glovebox_gazebo)/models/glovebox/model.sdf 
+            -sdf -x 0 -y 0 -z 0 -R 0 -P 0.0 -Y 0 -model glovebox" respawn="false" output="screen" />
+        <node name="spawn_pedestal" pkg="gazebo_ros"
+          type="spawn_model" args="-file $(find glovebox_gazebo)/models/pedestal/model.sdf 
+            -sdf -x -1.25 -y .26 -z 0 -R 0 -P 0.0 -Y 0 -model pedestal" respawn="false" output="screen" />
+    </group>
+
+</launch>

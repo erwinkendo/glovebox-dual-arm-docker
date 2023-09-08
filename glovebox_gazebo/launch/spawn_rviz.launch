@@ -1,0 +1,35 @@
+<launch>
+
+    <!-- Arguments -->
+    <!-- Start the GUIs -->
+    <arg name="start_gazebo" default="true"/>
+    <arg name="gazebo_gui"   default ="true"/>
+    <arg name="start_rviz" default="true"/>
+    
+    <!-- Arm and gripper type -->
+    <arg name="arm" default="gen3"/>
+    <arg name="dof" default="7" if="$(eval arg('arm') == 'gen3')"/> <!-- Number of degrees of freedom of the arm -->
+    <arg name="dof" default="6" if="$(eval arg('arm') == 'gen3_lite')"/> <!-- Number of degrees of freedom of the arm -->
+    <arg name="vision" default="true"/> <!-- True if the arm has a Vision module -->
+
+    <!-- Default gripper for Gen3 is none, default gripper for Gen3 lite is gen3_lite_2f -->
+    <arg name="gripper" default="" if="$(eval arg('arm') == 'gen3')"/>
+    <arg name="gripper" default="gen3_lite_2f" if="$(eval arg('arm') == 'gen3_lite')"/>
+
+    <arg name="robot_ns_A" default="robot_A"/>
+    <arg name="robot_ns_B" default="robot_B"/>
+    <arg name="prefix" default=""/>
+    <arg name="cyclic_data_publish_rate" default="40"/> <!--Hz-->
+
+    <!-- Use trajectory controllers and MoveIt -->
+    <!-- TODO: what is this parameter used for? -->
+    <!-- <arg name="use_trajectory_controller" default="false"/> -->
+
+    <!-- Gazebo parameters -->
+    <arg name="use_sim_time" default="true"/>
+    <arg name="debug" default="false" />
+    <arg name="paused" default="true"/>
+
+    <!-- Start RViz -->
+    <node name="rviz" pkg="rviz" type="rviz" if="$(arg start_rviz)"/> 
+</launch>
